@@ -1,7 +1,7 @@
 
 var margin = {top: 30, right: 100, bottom: 20, left: 280},
-    width = 1500 - margin.left - margin.right,
-    height = 800 - margin.top - margin.bottom;
+    width = 1000 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
 
 var dset = "times_2016_top200.csv";
 startD3();
@@ -46,15 +46,19 @@ var tooltip = d3.select("body")
     .style("z-index", "10")
     .style("visibility", "hidden")
     .attr("class","sc_tooltip");
+
+
 // linear color scale
 var blue_to_brown = d3.scale.linear()
- .domain([9, 50])
-  .range(["steelblue", "brown"])
+ .domain([1, 20,40,60,80,100,120,140,160,180,200])
+  .range(["#a6cee3","#1f78b4","#b2df8a","#33a02c",
+            "#fb9a99","#e31a1c","#fdbf6f","#ff7f00",
+            "#cab2d6","#6a3d9a","#ffff99","#b15928"])
   .interpolate(d3.interpolateLab);
 
 var zcolorscale = d3.scale.linear()
   .domain([-2,-0.5,0.5,2])
-  .range(["brown", "#999", "#999", "steelblue"])
+  .range(["#b15928", "#999", "#999", "#cab2d6"])
   .interpolate(d3.interpolateLab);
 // interact with this variable from a javascript console
 var pc1;
@@ -65,7 +69,7 @@ d3.csv(dset, function(data) {
     .data(data)
     .hideAxis(["name","world_rank","university_name","country","","num_students","student_staff_ratio","international_students","female_male_ratio","year"])
     .composite("darken")
-    .color(function(d) { return blue_to_brown(d['citations']); })  // quantitative color scale
+    .color(function(d) { return blue_to_brown(d['world_rank']); })  // quantitative color scale
     .alpha(0.35)
     .render()
     .reorderable()
@@ -149,7 +153,7 @@ function zscore(col) {
     pc1.svg.classed("active", true);
     projection.classed("inactive", function(p) { return p !== d; });
     projection.filter(function(p) { return p === d; }).each(moveToFront);
-    tooltip.text(d.world_rank + "- " + d.university_name );
+    tooltip.text(d.world_rank + "- " + d.name );
     return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").style("visibility","visible");
 
   }
@@ -166,4 +170,6 @@ function zscore(col) {
 
 }
 );
+
+
 }
